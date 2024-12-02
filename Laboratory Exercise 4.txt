@@ -1,0 +1,27 @@
+; Program to input characters from keyboard
+; Code 0dh (Enter) exits to the OS
+    ORG 	100h
+
+START:
+    ; Read a character from the keyboard
+    mov ah, 1      ; Function 1 - keyboard input
+    int 21h        ; Call MS-DOS interrupt
+    ; The character is now in the AL register
+
+    ; Check if the character is Enter (ASCII 0dh)
+    cmp al, 0dh    ; Compare the character with 0dh (Enter key)
+    je exit_program ; If Enter key is pressed, jump to exit_program
+
+    ; Output the character to the screen
+    mov dl, al     ; Move the input character (AL) to DL for output
+    mov ah, 2      ; Function 2 - output character
+    int 21h        ; Call MS-DOS interrupt to output character
+
+    ; Loop back to read the next character
+    jmp START      ; Jump back to the start to read the next character
+
+exit_program:
+    ; Terminate the program and return control to MS-DOS
+    mov ax, 4c00h  ; Code for terminating program and returning to MS-DOS
+    int 21h        ; Call MS-DOS interrupt to terminate the program
+

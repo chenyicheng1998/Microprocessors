@@ -1,0 +1,135 @@
+TASK 2
+	include "emu8086.inc"
+; START-OF-PROGRAM
+	org 100h
+	jmp start  
+
+; Memory variables:
+msg1	db	"Enter a string (max 128 characters): ",0
+; the buffer to save the entered string    
+mystr	db	128 dup (0),0
+endl	db	0dh,0ah,0
+
+start:
+	lea		SI, msg1		; Message address
+    call	PRINT_STRING	; Print message from [SI]
+	
+	lea		DI, mystr						; String mystring: Read string here!
+	mov		DX, 128						; String length
+	call	GET_STRING						; Read string into [DI]
+	lea		SI, endl						; cr+lf buffer address
+	call	PRINT_STRING						; Print cr+lf [SI]
+	lea		SI, mystr						; String mystring buffer address
+	call	PRINT_STRING						; Print string from [SI]
+bort:	mov	ax,4c00h	; code for return to ms-dos
+	int		21h	; call ms-dos terminate program
+	ret
+
+; Macro definitions
+DEFINE_GET_STRING
+DEFINE_PRINT_STRING
+DEFINE_PRINT_NUM
+DEFINE_PRINT_NUM_UNS
+	end 					;END-OF-PROGRAM
+
+
+
+
+TASK 2
+
+	include "emu8086.inc"
+; START-OF-PROGRAM
+	org 100h
+	jmp start
+
+; Memory variables:
+msg3    db  0ah,0dh,"The string is a palindrome.",0
+msg2	db 	0ah,0dh,"The string is NOT a palindrome.",0 
+msg1	db	"Enter a string (max 128 characters): ",0
+; the buffer to save the entered string
+mystr	db	128 dup (0),0
+mystrREV	db	128 dup (0),0
+endl	db	0dh,0ah,0
+length	db	0
+
+start:
+	lea		SI, msg1		; Message address
+    CALL	PRINT_STRING	; Print message from [SI]
+	lea		DI, mystr				; String mystring: Read string here!
+	mov		DX, 128					; String max. length
+	call	GET_STRING				; Read string into [DI]
+	lea		si,endl
+	call	print_string
+
+
+; count the number of characters in the buffer mystr into CX:
+	mov		cl,0			; start from 0
+	lea		SI,mystr		; Point SI to mystr							SI是指针，从0147H开始，数5个后到014CH
+tess:
+	mov		al,[SI],0		; End of data?
+	cmp		al,0			; -“-
+	je		seur			; Proceed to next step
+	inc		cl				; Increment data counter
+	inc		SI				; Increment data pointer
+	jmp		tess			; Check next
+; copy mystr into mystrREV in reverse order
+seur:
+	mov		length,cl		; Store # of characters in length    字符串长度
+	lea		DI,mystrREV				; Result buffer address into DI			DI是新字符串的开始位置的指针，指向01C7H
+	dec		SI				; Source buffer address id SI(decremented)   SI是指针，回到0147H的初始位置
+
+coop:
+	mov		al,[SI]								; Copy character from source
+	mov		[DI],al								; Copy character to destination
+	dec		SI								; Decrement source pointer
+	inc		DI 								; Increment result pointer
+	dec		cl								; Decrement counter
+	jnz		coop								; Take next if not done
+
+; print both buffers
+	lea		si,mystr
+	call	print_string	; Print mystr
+	lea 	si,endl
+	call	print_string	; Print cr+lf
+	
+	lea 	si,mystrREV
+	call	print_string	; Print mystrREV
+	lea 	si,endl
+	call	print_string	;print cr+lf
+
+; compare strings. If equal => palindrome    147    1c7
+	mov		cl,length		; # of characters in buffers 
+	lea		si,mystr		; address of first buffer
+	lea		di,mystrREV		; address of second buffer
+niis:
+	cmp		cl,0			; test if end-of-comparison/buffer
+	je		positive						; jump to ok, palindrome/empty buffer	
+	mov		al,[si]						; Source buffer address
+	mov		bl,[di]				; Result buffer address
+	cmp		al,bl				; Are same, still chance?
+	jne		negative				; Nop, jump to print NOT-message and exit
+	inc		si						; increment source pointer
+	inc		di						; increment destination pointer
+	dec		cl						; decrement counter
+	jmp		niis			; Try next
+
+positive:
+	lea		SI,msg3			; Yess, palindrome
+	call	PRINT_STRING	; Print it
+	jmp		bort			; and exit
+
+negative:
+	lea		si,msg2			; NOT a palindrome
+	call	PRINT_STRING	; Print it and exit
+
+bort:
+	mov		ax,4c00h		; code for return to ms-dos
+	int		21h				; call ms-dos terminate program
+	ret
+
+; Macro definitions
+DEFINE_GET_STRING
+DEFINE_PRINT_STRING
+DEFINE_PRINT_NUM
+DEFINE_PRINT_NUM_UNS
+	end 					;END-OF-PROGRAM

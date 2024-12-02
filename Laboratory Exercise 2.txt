@@ -1,0 +1,41 @@
+TASK 1
+; Program To Wait For a Keystroke
+
+org 100h
+
+    mov ah,00
+    int 16h
+    
+    mov ah,4ch
+    mov al,00
+    int 21h             
+    
+    ret
+
+
+TASK 2
+; Program To Wait For a Keystroke
+
+        org     100h
+        jmp     start
+msg:    db      "Hello World!", 0dh, 0ah, 24h
+start:  mov     dx,msg
+        mov     ah,09h
+        int     21h
+        
+        mov     ah,0
+        int     16h
+        ret
+
+
+
+
+TASK 3
+org 100h      
+mov ax,30
+add ax,15
+mov bx,575
+sub bx,225
+mul bx
+add ax,210
+ret

@@ -1,0 +1,17 @@
+; Program to find square and cube of a number 
+    	ORG 	100h
+    	JMP 	START	; Jump to the beginning of the code	
+X   	DW 	    04H      	;Define word X, with the value 04H (decimal 4)
+SQ  	DW 	    ?        	;Define word SQ (to store the square result)
+CB  	DW 	    ?        	;Define word CB (to store the cube result)
+START:  MOV 	AX,X    	;Load the value of X (which is 4) into AX
+    	MOV 	BX,X    	;Copy the value of X (4) into BX
+    	MUL 	BX      	;AX = AX * BX = 4 * 4 = 16 (Square of X)
+    	MOV 	SQ,AX   	;Store the result (16) into SQ (Square)
+    	MUL 	BX      	;AX = AX * BX = 16 * 4 = 64 (Cube of X)
+    	MOV 	CB,AX   	;Store the result (64) into CB (Cube)
+    
+    	MOV 	AH,4CH  	;DOS interrupt to terminate the program
+    	INT 	21H     	;Exit program
+    	RET
+

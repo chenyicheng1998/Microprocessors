@@ -1,0 +1,88 @@
+4336
+
+
+;START-OF-PROGRAM
+	org 	100h 
+    jmp 	start
+
+; define your variables below
+msg 	db  	'Result shown in AX ', 0dh, 0ah, '$'
+
+start: 
+    	lea  	dx,msg 	; load string address to dx
+    	call 	puts   	; output string
+
+; Write your code here!
+
+    ; Perform the arithmetic operation: 2 * (43 + 36) * (5 + 43) - 5
+
+    ; First, compute (43 + 36) and store it in a register (e.g., BX)
+    mov ax, 43      ; Load 43 into AX
+    add ax, 36      ; Add 36 to AX (AX = 43 + 36)
+    mov bx, ax      ; Store the result in BX (BX = 43 + 36)
+
+    ; Next, compute (5 + 43) and store it in CX
+    mov ax, 5       ; Load 5 into AX
+    add ax, 43      ; Add 43 to AX (AX = 5 + 43)
+    mov cx, ax      ; Store the result in CX (CX = 5 + 43)
+
+    ; Now compute 2 * (43 + 36) = 2 * BX
+    mov ax, 2       ; Load 2 into AX
+    mul bx          ; Multiply AX by BX (AX = 2 * (43 + 36))
+
+    ; Then multiply the result by (5 + 43) = CX
+    mul cx          ; Multiply AX by CX (AX = 2 * (43 + 36) * (5 + 43))
+
+    ; Finally subtract 5
+    sub ax, 5       ; Subtract 5 from AX (AX = 2 * (43 + 36) * (5 + 43) - 5)
+
+    ; The result is now in AX, no need to store it anywhere else
+
+	
+	
+    ret 
+
+; *****************************************************************
+;                User-defined subroutines
+;        Always paste these at the end of your program
+; *****************************************************************
+;***** puts
+;The subroutine to display a string terminated by '$' 
+;dx contains address of string
+puts:  
+    mov	ah,9	; output string subprogram
+    int	21h	; call ms-dos output string
+    ret
+
+;***** gets
+;The subroutine to input a character with echo 
+getc:  
+    mov	ah,1    ; keyboard input subprogram
+    int	21h    ; call ms-dos input character
+    ret       ; the character input is stored in al
+
+;***** getcb
+;The subroutine to input a character without echo 
+getcb: 
+    mov	ah,8    ; keyboard input subprogram
+    int	21h    ; call ms-dos input character
+    ret       ; the character input is stored in al
+
+;***** putc
+;The subroutine to display a character on screen
+;dl contains ascii code of the character, e.g. 'a' or 0dh
+putc:  
+    mov	ah,2	; character output subprogram
+    int	21h    ; call ms-dos output character
+    ret
+
+;***** exitus
+;The subroutine to terminate a program and return to ms-dos
+exitus: 
+    mov	ax,4c00h  ; code for return to ms-dos
+    int	21h       ; call ms-dos terminate program
+    ret 
+
+;******************* End-of-subroutines *****************************
+ret
+; END-OF-PROGRAM

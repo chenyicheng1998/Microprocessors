@@ -1,0 +1,75 @@
+;START-OF-PROGRAM
+		org 	100h 
+    	jmp 	start
+
+msg 	db  	'Enter a character (the enter key ends)',0dh,0ah,'$'
+
+start: 
+    	lea  	dx,msg 	; load string address to dx
+    	call 	puts   	; output string
+
+; Write your code here!
+
+read_char:
+    	call	getc       ; Call the gets subroutine to read a character from the keyboard
+    	cmp		al, 0dh      ; Check if the Enter key (0dh) was pressed
+    	je		exit_program  ; If Enter key was pressed, jump to exit
+
+		mov		dl, al       ; Move the character from AL to DL (required for putc)
+    	call	putc       ; Display the character using the putc subroutine
+    	jmp		read_char    ; Repeat the process by jumping back to read_char
+
+exit_program:
+    	call	exitus     ; Exit the program by calling exitus subroutine
+
+ret 
+
+
+; *****************************************************************
+;                User-defined subroutines
+;        Always paste these at the end of your program
+; *****************************************************************
+;***** puts
+;The subroutine to display a string terminated by '$' 
+;dx contains address of string
+puts:  
+    mov	ah,9	; output string subprogram
+    int	21h	; call ms-dos output string
+    ret
+
+;***** gets
+;The subroutine to input a character with echo 
+getc:  
+    mov	ah,1    ; keyboard input subprogram
+    int	21h    ; call ms-dos input character
+    ret       ; the character input is stored in al
+
+;***** getcb
+;The subroutine to input a character without echo 
+getcb: 
+    mov	ah,8    ; keyboard input subprogram
+    int	21h    ; call ms-dos input character
+    ret       ; the character input is stored in al
+
+;***** putc
+;The subroutine to display a character on screen
+;dl contains ascii code of the character, e.g. 'a' or 0dh
+putc:  
+    mov	ah,2	; character output subprogram
+    int	21h    ; call ms-dos output character
+    ret
+
+;***** exitus
+;The subroutine to terminate a program and return to ms-dos
+exitus: 
+    mov	ax,4c00h  ; code for return to ms-dos
+    int	21h       ; call ms-dos terminate program
+    ret 
+
+;******************* End-of-subroutines *****************************
+ret
+
+;END-OF-PROGRAM
+
+
+

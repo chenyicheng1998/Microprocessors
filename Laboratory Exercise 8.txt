@@ -1,0 +1,41 @@
+include "emu8086.inc"
+; START-OF-PROGRAM
+	org 100h
+	jmp start
+    
+; Memory variables
+f0	dw	0	; Previous number
+f1	dw 	1	; Second etc. number
+n	equ	22	; Loop count (22 first numbers)
+prompt1	db	0dh, 0ah,"The first 22 Fibonacci numbers: ",0
+
+start:	lea		SI, prompt1		; Address of prompt1: “The first...”
+		mov		ch,00h			; Loop counter (to go 00 - 22)
+RD1:	call	PRINT_STRING	; Print prompt1
+		mov		ax,f0			; First Fibonacci number to ax
+		
+		call	PRINT_NUM			; Print first number
+		PUTC	' '					; Print space character
+up1:	cmp 	ch, n				; Last number?
+		je		bort				; Exit to bort: if all done 
+			
+;calculate next Fibonacchi number
+		mov		bx, f1				; LOAD f1 to BX
+		mov		ax, f0				; Load f0 to AX
+		add		ax, bx				; Add: AX=f1+f0
+		call	PRINT_NUM			; PRINT it
+		PUTC	' '					; Print space character
+		mov		f0, bx				; Update “Previous number”
+		mov		f1, ax				; Update “Second number”
+		inc		ch					; Increment loop counter
+		jmp		up1					; Print next (jmp to up1:)	 
+    
+bort:	mov	ax,4c00h			; code for return to ms-dos
+		int	21h					; call ms-dos terminate program
+		ret
+
+; Macro definitions
+DEFINE_PRINT_STRING
+DEFINE_PRINT_NUM
+DEFINE_PRINT_NUM_UNS
+	end 					;END-OF-PROGRAM

@@ -1,0 +1,106 @@
+TASK1
+
+#make_bin#
+
+; Load binary value (decimal 5) into al
+    mov al,00000101b
+    
+; Load hex value (decimal 10) into bl 
+    mov bl,0ah
+
+; Load octal value (decimal 8) into cl 
+    mov cl,10o
+
+; Add al and bl: 5+10=15 (0Fh)
+    add al,bl
+    
+; Sub cl from al: 15-8=7
+    sub al,cl
+              
+HLT         ; halt
+
+
+
+TASK2
+
+#make_bin#
+
+; Step 1: Load 255 into the AL register
+mov al, 0FFh  ; 255 in hexadecimal
+
+; Step 2: Load 1 into the BL register
+mov bl, 01h  ; 1 in hexadecimal
+
+; Step 3: Load 2 into the CL register
+mov cl, 02h  ; 2 in hexadecimal
+
+; Step 4: Add BL to AL and store the result in AL
+add al, bl    ; AL = AL + BL -> AL = 255 + 1 = 256, which is 00h in AL and carry to the next byte (if applicable)
+
+; Step 5: Subtract CL from AL and store the result in AL
+sub al, cl    ; AL = AL - CL -> AL = 00h - 02h = FEh (254 in decimal)
+
+HLT            ; halt
+
+
+
+TASK3
+
+#make_bin#
+; This sample shows how the CMP instruction sets the flags.
+; Usually the CMP instruction is followed by any relative
+; jump instruction such as JE, JA, JL, JAE...
+; The NOP instruction does nothing (no operation).
+; Before starting the exercise it is recommended to open:
+; "Lexical Flag Analyzer" and "Flags" from emulator's "View"
+; menu before running this code.
+
+
+; A (Signed/Unsigned) Comparison: Jump if AH is Equal to AL
+MOV AH, 4
+MOV AL, 4
+CMP AH, AL
+NOP
+
+; B (Signed/Unsigned) Comparison: Jump if AH is Above and Greater than AL
+MOV AH, 1
+MOV AL, 3
+CMP AH, AL
+NOP
+
+; C (Signed) Comparison: Jump if AH is Greater than AL (-5 = 251 = 0Fbh)
+MOV AH, 1
+MOV AL, -5
+CMP AH, AL
+NOP
+
+; D (Unsigned) Comparison: Jump if AH is Below AL
+MOV AH, 1
+MOV AL, 251
+CMP AH, AL
+NOP
+
+; E (Signed) Comparison: Jump if AH is Less than AL
+MOV AH, -3
+MOV AL, -2
+CMP AH, AL
+NOP
+
+; F (Signed) Comparison: Jump if AH is Greater than AL
+MOV AH, -2
+MOV AL, -3
+CMP AH, AL
+NOP
+
+; G (Unsigned) Comparison: Jump if AH is Above AL
+MOV AH, 255
+MOV AL, 1
+CMP AH, AL
+NOP
+HLT
+
+
+
+
+
+
